@@ -6,9 +6,14 @@ import Navbar from "./Navbar";
 const Sidebar = ({ children }) => {
   const location = useLocation();
   const [active, setActive] = useState(location.pathname);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const handleClick = (menuPath) => {
     setActive(menuPath);
+  };
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
   };
 
   return (
@@ -18,14 +23,14 @@ const Sidebar = ({ children }) => {
 
         {/* sidenav  */}
         <aside
-          className="fixed inset-y-0 flex-wrap items-center justify-between block w-full p-0 my-4 overflow-y-auto antialiased transition-transform duration-200 -translate-x-full bg-white border-0 shadow-xl dark:shadow-none dark:bg-slate-850 max-w-64 ease-nav-brand z-990 xl:ml-6 rounded-2xl xl:left-0 xl:translate-x-0"
+          className={`fixed inset-y-0 flex-wrap items-center justify-between block w-full p-0 my-4 overflow-y-auto antialiased transition-transform duration-200 -translate-x-full bg-white border-0 shadow-xl dark:shadow-none dark:bg-slate-850 max-w-64 ease-nav-brand z-990 xl:ml-6 rounded-2xl xl:left-0 xl:translate-x-0 ${ isSidebarOpen ? "translate-x-0" : ""}`}
           aria-expanded="false"
         >
           <div className="h-19">
-            <i
+            <button
+              onClick={toggleSidebar}
               className="absolute top-0 right-0 p-4 opacity-50 cursor-pointer fas fa-times dark:text-white text-slate-400 xl:hidden"
-              sidenav-close
-            />
+            ></button>
             <a
               className="block px-8 py-6 m-0 text-sm whitespace-nowrap dark:text-white text-slate-700"
               href="https://demos.creative-tim.com/argon-dashboard-tailwind/pages/dashboard.html"
@@ -161,7 +166,7 @@ const Sidebar = ({ children }) => {
         {/* end sidenav */}
 
         <main class="relative h-full max-h-screen transition-all duration-200 ease-in-out xl:ml-68 rounded-xl">
-          <Navbar />
+          <Navbar toggleSidebar={toggleSidebar} />
           {children}
         </main>
         </div>

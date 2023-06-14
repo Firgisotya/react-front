@@ -1,13 +1,10 @@
 import { React, useState } from "react";
 import UserDropdown from "./UserDropdown";
 
-const Navbar = () => {
+const Navbar = ({toggleSidebar}) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDropdownUserOpen, setIsDropdownUserOpen] = useState(false);
 
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
 
   const toggleDropdownUser = () => {
     setIsDropdownUserOpen(!isDropdownUserOpen);
@@ -54,17 +51,16 @@ const Navbar = () => {
             </div>
             <ul className="flex flex-row justify-end pl-0 mb-0 list-none md-max:w-full">
               <li className="flex items-center pl-4 xl:hidden">
-                <a
-                  href="javascript:;"
+                <button
+                  onClick={toggleSidebar}
                   className="block p-0 text-sm text-white transition-all ease-nav-brand"
-                  sidenav-trigger
                 >
                   <div className="w-4.5 overflow-hidden">
                     <i className="ease mb-0.75 relative block h-0.5 rounded-sm bg-white transition-all" />
                     <i className="ease mb-0.75 relative block h-0.5 rounded-sm bg-white transition-all" />
                     <i className="ease relative block h-0.5 rounded-sm bg-white transition-all" />
                   </div>
-                </a>
+                </button>
               </li>
               <li className="flex items-center px-4">
                 <a
