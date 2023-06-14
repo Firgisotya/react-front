@@ -13,6 +13,7 @@ const MySwal = withReactContent(Swal);
 const Kelas = () => {
   const token = localStorage.getItem("authToken");
   const [kelas, setKelas] = useState([]);
+  const [selectedKelas, setSelectedKelas] = useState(null);
 
   const navigate = useNavigate();
 
@@ -38,15 +39,12 @@ const Kelas = () => {
     if (selectedKelas && selectedKelas.id === newKelas.id) {
       setSelectedKelas(newKelas);
     }
-    
   };
 
-  const [selectedKelas, setSelectedKelas] = useState(null);
-  
-
-  const handleEdit = (kelas) => {
-    setSelectedKelas(kelas);
+  const handleEditButton = (item) => {
+    setSelectedKelas(item);
   };
+
 
   const handleDelete = async (id) => {
     try {
@@ -103,7 +101,10 @@ const Kelas = () => {
                           </th>
                           <td className="px-6 py-4">{item.kode_kelas}</td>
                           <td className="px-6 py-4 space-x-2">
-                            <button className="btn btn-outline btn-accent" onClick={() => handleEdit(item)}>
+                            <button
+                              onClick={() => handleEditButton(item)}
+                              className="btn btn-outline btn-accent"
+                            >
                               <BsFillPencilFill />
                             </button>
 
@@ -116,14 +117,25 @@ const Kelas = () => {
                           </td>
                         </tr>
                       ))}
+
                     </tbody>
                   </table>
                 </div>
-              </div>
+              </div>  
             </div>
           </div>
         </div>
       </div>
+      {selectedKelas && (
+        <EditKelas
+          kelas={selectedKelas}
+          onCancel={() => setSelectedKelas(null)} // Hapus data dari state selectedKelas saat membatalkan edit
+          onEdit={() => {
+            setSelectedKelas(null); // Hapus data dari state selectedKelas saat berhasil mengedit
+            getKelas(); // Ambil kembali data kelas setelah berhasil mengedit
+          }}
+        />
+      )}
     </Sidebar>
   );
 };

@@ -5,23 +5,42 @@ import withReactContent from "sweetalert2-react-content";
 
 const MySwal = withReactContent(Swal);
 
-const EditKelas = ({kelas}) => {
-  const [isModalVisible, setIsModalVisible] = useState(false);
+const EditKelas = ({ kelas, onEdit, onCancel }) => {
+  const [namaKelas, setNamaKelas] = useState(kelas.nama_kelas);
+  const [kodeKelas, setKodeKelas] = useState(kelas.kode_kelas);
 
-  const [editedKelas, setEditedKelas] = useState(kelas);
-  
+  const handleEdit = async () => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const updatedKelas = { nama_kelas: namaKelas, kode_kelas: kodeKelas };
+      await axios.put(
+        `http://localhost:8000/api/kelas/${kelas.id}`,
+        updatedKelas,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      onEdit();
+      MySwal.fire({
+        icon: "success",
+        title: "Berhasil",
+        text: "Kelas berhasil diubah",
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div>
-     
       {/* Main modal */}
       <div
         id="defaultModal"
         tabIndex={-1}
         aria-hidden="true"
-        className={`fixed top-0 left-0 right-0 z-50 ${
-          isModalVisible ? "" : "hidden"
-        } w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full`}
+        className="fixed top-0 left-0 right-0 z-50  w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full"
       >
         <div className="relative w-full  max-w-xl max-h-full flex items-center mx-auto py-10">
           {/* Modal content */}
@@ -32,7 +51,7 @@ const EditKelas = ({kelas}) => {
                 Edit Kelas
               </h3>
               <button
-                onClick={() => setIsModalVisible(!isModalVisible)}
+                onClick={onCancel}
                 type="button"
                 className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
                 data-modal-hide="defaultModal"
@@ -69,6 +88,8 @@ const EditKelas = ({kelas}) => {
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Nama Kelas"
                     required
+                    value={namaKelas}
+                    onChange={(e) => setNamaKelas(e.target.value)}
                   />
                 </div>
                 <div className="mb-6">
@@ -84,6 +105,8 @@ const EditKelas = ({kelas}) => {
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Kode Kelas"
                     required
+                    value={kodeKelas}
+                    onChange={(e) => setKodeKelas(e.target.value)}
                   />
                 </div>
               </form>
@@ -91,10 +114,7 @@ const EditKelas = ({kelas}) => {
             {/* Modal footer */}
             <div className="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
               <button
-                onClick={() => {
-                    onEdit(editedKelas);
-                    setIsModalVisible(false);
-                }}
+                onClick={handleEdit}
                 data-modal-hide="defaultModal"
                 type="button"
                 className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
@@ -102,7 +122,7 @@ const EditKelas = ({kelas}) => {
                 Edit
               </button>
               <button
-                onClick={() => setIsModalVisible(!isModalVisible)}
+                onClick={onCancel}
                 data-modal-hide="defaultModal"
                 type="button"
                 className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
