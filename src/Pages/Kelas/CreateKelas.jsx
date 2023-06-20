@@ -19,7 +19,7 @@ const CreateKelas = ({onKelasAdded}) => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/kelas",
+        `${import.meta.env.VITE_API_LOCAL}/kelas`,
         modalCreate,
         {
           headers: {

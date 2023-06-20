@@ -7,7 +7,7 @@ import withReactContent from "sweetalert2-react-content";
 import CreateKelas from "./CreateKelas";
 import { BsFillPencilFill, BsFillTrashFill } from "react-icons/bs";
 import EditKelas from "./EditKelas";
-import {Bars} from 'react-loader-spinner';
+import { ClipLoader } from 'react-spinners';
 
 const MySwal = withReactContent(Swal);
 
@@ -29,8 +29,7 @@ const Kelas = () => {
 
   const getKelas = async () => {
     try {
-      setIsLoading(true);
-      const { data } = await axios.get("http://localhost:8000/api/kelas", {
+      const { data } = await axios.get(`${import.meta.env.VITE_API_LOCAL}/kelas`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -39,7 +38,6 @@ const Kelas = () => {
       setIsLoading(false);
     } catch (error) {
       console.log(error);
-      setIsLoading(false);
     }
   };
   
@@ -58,7 +56,7 @@ const Kelas = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:8000/api/kelas/${id}`, {
+      await axios.delete(`${import.meta.env.VITE_API_LOCAL}/kelas/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -79,15 +77,7 @@ const Kelas = () => {
     <Sidebar>
       {isLoading ? (
         <div className="flex justify-center items-center">
-          <Bars
-          height="80"
-          width="80"
-          color="#d4d3d2"
-          ariaLabel="bars-loading"
-          wrapperStyle={{}}
-          wrapperClass=""
-          visible={true}
-        />
+          <ClipLoader size={150} color={"#FFFF"} loading={isLoading} />
         </div>
                   ) : (
       <div className="w-full px-6 py-6 mx-auto">

@@ -14,7 +14,7 @@ const EditKelas = ({ kelas, onEdit, onCancel }) => {
       const token = localStorage.getItem("authToken");
       const updatedKelas = { nama_kelas: namaKelas, kode_kelas: kodeKelas };
       await axios.put(
-        `http://localhost:8000/api/kelas/${kelas.id}`,
+        `${import.meta.env.VITE_API_LOCAL}/kelas/${kelas.id}`,
         updatedKelas,
         {
           headers: {
