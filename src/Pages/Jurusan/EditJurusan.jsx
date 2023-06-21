@@ -10,13 +10,21 @@ const EditJurusan = ({ jurusan, onEdit, onCancel }) => {
     const [namaJurusan, setNamaJurusan] = useState("");
     const [kodeJurusan, setKodeJurusan] = useState("");
 
+    useEffect(() => {
+      // Set the initial values for the input fields
+      setNamaJurusan(jurusan.nama_jurusan);
+      setKodeJurusan(jurusan.kode_jurusan);
+    }, [jurusan]);
+
     const handleEdit = async (e) => {
-        const updateJurusan = {namaJurusan: namaJurusan, kodeJurusan: kodeJurusan}
         e.preventDefault();
         try {
             await axios.put(
                 `${import.meta.env.VITE_API_LOCAL}/jurusan/${jurusan.id}`,
-                updateJurusan,
+                {
+                    nama_jurusan: namaJurusan,
+                    kode_jurusan: kodeJurusan,
+                },
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -24,18 +32,18 @@ const EditJurusan = ({ jurusan, onEdit, onCancel }) => {
                 }
             );
             onEdit();
-            // MySwal.fire({
-            //     icon: "success",
-            //     title: "Berhasil",
-            //     text: "Data berhasil diubah",
-            // });
+            MySwal.fire({
+                icon: "success",
+                title: "Berhasil",
+                text: "Data berhasil diubah",
+            });
         } catch (error) {
             console.log(error);
-            // MySwal.fire({
-            //     icon: "error",
-            //     title: "Gagal",
-            //     text: "Data gagal diubah",
-            // });
+            MySwal.fire({
+                icon: "error",
+                title: "Gagal",
+                text: "Data gagal diubah",
+            });
         }
     };
 
