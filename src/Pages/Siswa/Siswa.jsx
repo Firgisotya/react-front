@@ -5,13 +5,64 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { BsFillPencilFill, BsFillTrashFill } from "react-icons/bs";
-import { ClipLoader } from 'react-spinners';
+import { ClipLoader } from "react-spinners";
 import CreateSiswa from "./CreateSiswa";
 
 const MySwal = withReactContent(Swal);
 
-const Siswa = () => {
+const ActionDropdown = () => {
+  const [isOpen, setIsOpen] = useState(false);
 
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const handleEdit = () => {
+    // Implement edit logic here
+    console.log('Edit action');
+  };
+
+  const handleDelete = () => {
+    // Implement delete logic here
+    console.log('Delete action');
+  };
+
+  return (
+    <td className="px-6 py-4 space-y-1">
+      <div className="relative">
+        <button
+          className="dropdown-toggle"
+          onClick={toggleDropdown}
+          onBlur={() => setTimeout(() => setIsOpen(false), 100)}
+        >
+          Actions
+        </button>
+        {isOpen && (
+          <ul className="dropdown-menu">
+            <li>
+              <button
+                className="dropdown-item"
+                onClick={handleEdit}
+              >
+                Edit
+              </button>
+            </li>
+            <li>
+              <button
+                className="dropdown-item"
+                onClick={handleDelete}
+              >
+                Delete
+              </button>
+            </li>
+          </ul>
+        )}
+      </div>
+    </td>
+  );
+};
+
+const Siswa = () => {
   const token = localStorage.getItem("authToken");
   const [siswa, setSiswa] = useState([]);
   const [selectedSiswa, setSelectedSiswa] = useState(null);
@@ -29,11 +80,14 @@ const Siswa = () => {
 
   const getSiswa = async () => {
     try {
-      const { data } = await axios.get(`${import.meta.env.VITE_API_LOCAL}/siswa`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const { data } = await axios.get(
+        `${import.meta.env.VITE_API_LOCAL}/siswa`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      });
+      );
       setSiswa(data.data);
       setIsLoading(false);
     } catch (error) {
@@ -47,7 +101,7 @@ const Siswa = () => {
     if (selectedSiswa && selectedSiswa.id === newSiswa.id) {
       setSelectedSiswa(newSiswa);
     }
-  }
+  };
 
   const handleEditButton = (item) => {
     setSelectedSiswa(item);
@@ -74,8 +128,7 @@ const Siswa = () => {
         text: "Data gagal dihapus",
       });
     }
-  }
-
+  };
 
   return (
     <Sidebar>
@@ -83,17 +136,16 @@ const Siswa = () => {
         <div className="flex justify-center items-center">
           <ClipLoader size={150} color={"#FFFF"} loading={isLoading} />
         </div>
-                  ) : (
-      <div className="w-full px-6 py-6 mx-auto">
-        <div className="flex flex-wrap mt-6 -mx-3">
-          <div className="w-full px-3 mt-0 lg:flex-none">
-            <div className="border-black/12.5 dark:bg-slate-850 dark:shadow-dark-xl shadow-xl relative z-20 flex min-w-0 flex-col break-words rounded-2xl border-0 border-solid bg-white bg-clip-border">
-              <div className="px-4 py-2">
-                <CreateSiswa onSiswaAdded={handleSiswaAdded} />
-              </div>
-              <div class="px-4 py-4 w-full">
-                <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-                  
+      ) : (
+        <div className="w-full px-6 py-6 mx-auto">
+          <div className="flex flex-wrap mt-6 -mx-3">
+            <div className="w-full px-3 mt-0 lg:flex-none">
+              <div className="border-black/12.5 dark:bg-slate-850 dark:shadow-dark-xl shadow-xl relative z-20 flex min-w-0 flex-col break-words rounded-2xl border-0 border-solid bg-white bg-clip-border">
+                <div className="px-4 py-2">
+                  <CreateSiswa onSiswaAdded={handleSiswaAdded} />
+                </div>
+                <div class="px-4 py-4 w-full">
+                  <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
                     <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                       <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
@@ -145,48 +197,46 @@ const Siswa = () => {
                               scope="row"
                               className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                             >
-                              
+                              {item.nis}
                             </th>
-                            <td className="px-6 py-4"></td>
-                            <td className="px-6 py-4"></td>
-                            <td className="px-6 py-4"></td>
-                            <td className="px-6 py-4"></td>
-                            <td className="px-6 py-4"></td>
-                            <td className="px-6 py-4"></td>
-                            <td className="px-6 py-4"></td>
-                            <td className="px-6 py-4"></td>
-                            <td className="px-6 py-4"></td>
-                            <td className="px-6 py-4"></td>
-                            <td className="px-6 py-4 space-x-2">
-                              <button
-                                onClick={() => handleEditButton(item)}
-                                className="btn btn-outline btn-accent"
-                              >
-                                <BsFillPencilFill />
-                              </button>
-
-                              <button
-                                onClick={() => handleDelete(item.id)}
-                                className="btn btn-outline btn-error"
-                              >
-                                <BsFillTrashFill />
-                              </button>
+                            <td className="px-6 py-4">{item.nama_siswa}</td>
+                            <td className="px-6 py-4">
+                              {item.kelas.nama_kelas}
+                            </td>
+                            <td className="px-6 py-4">
+                              {item.jurusan.nama_jurusan}
+                            </td>
+                            <td className="px-6 py-4">{item.tempat_lahir}</td>
+                            <td className="px-6 py-4">{item.tanggal_lahir}</td>
+                            <td className="px-6 py-4">{item.jenis_kelamin}</td>
+                            <td className="px-6 py-4">{item.agama}</td>
+                            <td className="px-6 py-4">{item.alamat}</td>
+                            <td className="px-6 py-4">{item.email}</td>
+                            <td className="px-6 py-4">{item.no_hp}</td>
+                            <td className="py-4">
+                              <img
+                                src={`${
+                                  import.meta.env.VITE_IMAGE_LOCAL
+                                }/storage/fotoSiswa/${item.foto}`}
+                                className="w-[500px]"
+                              />
+                            </td>
+                            <td className="px-6 py-4 space-y-1">
+                              <ActionDropdown />
                             </td>
                           </tr>
                         ))}
                       </tbody>
                     </table>
-                  
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-                  )}
- 
+      )}
     </Sidebar>
-  )
-}
+  );
+};
 
-export default Siswa
+export default Siswa;
