@@ -4,63 +4,13 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import { BsFillPencilFill, BsFillTrashFill } from "react-icons/bs";
+import { BsFillPencilFill, BsFillTrashFill, BsEyeFill } from "react-icons/bs";
 import { ClipLoader } from "react-spinners";
 import CreateSiswa from "./CreateSiswa";
+import EditSiswa from "./EditSiswa";
 
 const MySwal = withReactContent(Swal);
 
-const ActionDropdown = () => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const handleEdit = () => {
-    // Implement edit logic here
-    console.log('Edit action');
-  };
-
-  const handleDelete = () => {
-    // Implement delete logic here
-    console.log('Delete action');
-  };
-
-  return (
-    <td className="px-6 py-4 space-y-1">
-      <div className="relative">
-        <button
-          className="dropdown-toggle"
-          onClick={toggleDropdown}
-          onBlur={() => setTimeout(() => setIsOpen(false), 100)}
-        >
-          Actions
-        </button>
-        {isOpen && (
-          <ul className="dropdown-menu">
-            <li>
-              <button
-                className="dropdown-item"
-                onClick={handleEdit}
-              >
-                Edit
-              </button>
-            </li>
-            <li>
-              <button
-                className="dropdown-item"
-                onClick={handleDelete}
-              >
-                Delete
-              </button>
-            </li>
-          </ul>
-        )}
-      </div>
-    </td>
-  );
-};
 
 const Siswa = () => {
   const token = localStorage.getItem("authToken");
@@ -201,10 +151,10 @@ const Siswa = () => {
                             </th>
                             <td className="px-6 py-4">{item.nama_siswa}</td>
                             <td className="px-6 py-4">
-                              {item.kelas.nama_kelas}
+                              {item.kelas?.nama_kelas}
                             </td>
                             <td className="px-6 py-4">
-                              {item.jurusan.nama_jurusan}
+                              {item.jurusan?.nama_jurusan}
                             </td>
                             <td className="px-6 py-4">{item.tempat_lahir}</td>
                             <td className="px-6 py-4">{item.tanggal_lahir}</td>
@@ -221,8 +171,27 @@ const Siswa = () => {
                                 className="w-[500px]"
                               />
                             </td>
-                            <td className="px-6 py-4 space-y-1">
-                              <ActionDropdown />
+                            <td className="px-6 py-4 flex space-x-1">
+                            <button
+                                onClick={() => handleEditButton(item)}
+                                className="btn btn-outline btn-warning"
+                              >
+                                <BsEyeFill />
+                              </button>
+
+                            <button
+                                onClick={() => handleEditButton(item)}
+                                className="btn btn-outline btn-accent"
+                              >
+                                <BsFillPencilFill />
+                              </button>
+
+                              <button
+                                onClick={() => handleDelete(item.id)}
+                                className="btn btn-outline btn-error"
+                              >
+                                <BsFillTrashFill />
+                              </button>
                             </td>
                           </tr>
                         ))}
@@ -235,6 +204,18 @@ const Siswa = () => {
           </div>
         </div>
       )}
+
+{selectedSiswa && (
+        <EditSiswa
+          siswa={selectedSiswa}
+          onCancel={() => setSelectedSiswa(null)} 
+          onEdit={() => {
+            setSelectedSiswa(null); 
+            getSiswa();
+          }}
+        />
+      )}  
+
     </Sidebar>
   );
 };

@@ -89,6 +89,11 @@ const CreateSiswa = ({ onSiswaAdded }) => {
         console.log(errorMessages);
         // Tampilkan pesan kesalahan validasi kepada pengguna
         // Misalnya, dengan menggunakan SweetAlert atau komponen pemberitahuan lainnya
+        MySwal.fire({
+          icon: "error",
+          title: "Gagal",
+          text: errorMessages[0],
+        });
       } else {
         MySwal.fire({
           icon: "error",
